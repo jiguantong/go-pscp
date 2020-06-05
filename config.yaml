@@ -1,0 +1,11 @@
+host:
+  # 服务器IP地址
+  ip: 47.102.196.137
+  # 服务器密码
+  password: ali137
+  # 部署目录
+  dir: "/opt1"
+
+local:
+  # 本地待部署项目目录
+  dir: "D:/program/protoc-3.11.4-win64"
