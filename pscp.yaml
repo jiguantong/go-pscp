@@ -1,0 +1,20 @@
+host:
+  # 服务器IP地址
+  ip: 47.102.196.137
+  # 服务器密码
+  password: ali137
+  # 部署目录
+  dir: "/opt/project"
+
+local:
+  # 本地待部署项目目录
+  ##############
+  # local.dir 后不带 "/" 表示将该目录直接放到 { host.dir } 中
+  # 例 1: host.dir="/opt/project" local.dir="../go-pscp" 该目录下有 1.txt文件, 部署后1.txt文件路径为
+  # /opt/project/go-pscp/1.txt
+  ##############
+  # local.dir 后带 "/" 表示将该目录下所有文件部署到 { host.dir }中
+  # 例 2: host.dir="/opt/project" local.dir="../go-pscp/" 该目录下有 1.txt文件, 部署后1.txt文件路径为
+  # /opt/project/1.txt
+  ##############
+  dir: "../go-pscp/"
