@@ -2,20 +2,23 @@ package main
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
 )
 
+type Config struct {
+	User      string
+	Password  string
+	Ip        string
+	Remotedir string
+	Localdir  string
+}
+
 func main() {
-	viper.SetConfigName("pscp")
-	viper.AddConfigPath(".")
-	if err := viper.ReadInConfig(); err != nil {
-		log.Println("配置文件读取异常: " + err.Error())
-		os.Exit(1)
-	}
 	var puttyPath string
 	path := strings.Split(os.Getenv("PATH"), ";")
 	for _, v := range path {
@@ -29,16 +32,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	localDir := viper.GetString("local.dir")
-	host := new(Host)
-	host.Dir = viper.GetString("host.dir")
-	host.User = "root"
-	host.Ip = viper.GetString("host.ip")
-	host.Pwd = viper.GetString("host.password")
+	config := loadConf()
 	cmd := exec.Command(puttyPath+"pscp.exe", "-r", "-pw",
-		host.Pwd, localDir,
-		host.User+"@"+host.Ip+":"+
-			host.Dir)
+		config.Password, config.Localdir,
+		config.User+"@"+config.Ip+":"+
+			config.Remotedir)
 	fmt.Println(cmd.Args)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -47,4 +45,18 @@ func main() {
 		log.Println(err)
 		return
 	}
+}
+
+func loadConf() *Config {
+	var c = new(Config)
+	ymlFile, err := ioutil.ReadFile("./pscp.yml")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+	if err := yaml.Unmarshal(ymlFile, c); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+	return c
 }

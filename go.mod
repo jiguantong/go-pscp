@@ -2,7 +2,4 @@ module pscp
 
 go 1.14
 
-require (
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/spf13/viper v1.7.0
-)
+require gopkg.in/yaml.v2 v2.3.0
