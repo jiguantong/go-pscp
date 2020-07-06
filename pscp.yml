@@ -13,7 +13,7 @@ ip: 47.102.196.137
 # 服务器用户
 user: root
 # 服务器密码
-password: ali137
+password: 123456
 # 服务器部署目录
 remotedir: "/opt/project"
 # 本地待部署项目目录
