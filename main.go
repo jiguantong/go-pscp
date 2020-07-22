@@ -29,21 +29,25 @@ func main() {
 	path := strings.Split(os.Getenv("PATH"), ";")
 	for _, v := range path {
 		if strings.Contains(v, "PuTTY") {
-			puttyPath = v
+			puttyPath = v + "pscp.exe"
 			break
 		}
 	}
 	if len(puttyPath) == 0 {
-		log.Printf("PATH 中未找到 PuTTY, 请先安装 PuTTY\ndownload: %s\n", "https://the.earth.li/~sgtatham/putty/0.73/w64/putty-64bit-0.73-installer.msi")
-		os.Exit(1)
+		if len(os.Args) > 2 {
+			puttyPath = os.Args[2]
+		} else {
+			fmt.Println("PATH 中未找到 pscp, 可通过第二个参数指定pscp路径")
+			os.Exit(1)
+		}
 	}
 
 	config := loadConf()
-	cmd := exec.Command(puttyPath+"pscp.exe", "-r", "-pw",
+	cmd := exec.Command(puttyPath, "-r", "-pw",
 		config.Password, config.Localdir,
 		config.User+"@"+config.Ip+":"+
 			config.Remotedir)
-	fmt.Println(cmd.Args)
+	//fmt.Println(cmd.Args)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
@@ -57,7 +61,12 @@ func main() {
 
 func loadConf() *Config {
 	var c = new(Config)
-	ymlFile, err := ioutil.ReadFile("./pscp.yml")
+	filePath := "./pscp.yml"
+	if len(os.Args) > 1 {
+		filePath = os.Args[1]
+		fmt.Println(filePath)
+	}
+	ymlFile, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
