@@ -11,7 +11,7 @@
 -------------------------
 tomcat项目部署流程
 - 之前:
-  ### yarn build => 打开xftp => 找到部署目录 => 打开打包好的文件夹所在目录 => 拖动上传 => 切换到xshell => shutdown tomcat => start tomcat =>tailf log => 回IDEA 
+  ### build => 打开xftp => 找到部署目录 => 打开打包好的文件夹所在目录 => 拖动上传 => 切换到xshell => shutdown tomcat => start tomcat =>tailf log => 回IDEA 
 - 现在:
   ### pscp.exe
 
