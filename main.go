@@ -33,13 +33,11 @@ func main() {
 			break
 		}
 	}
-	if len(puttyPath) == 0 {
-		if len(os.Args) > 2 {
-			puttyPath = os.Args[2]
-		} else {
-			fmt.Println("PATH 中未找到 pscp, 可通过第二个参数指定pscp路径")
-			os.Exit(1)
-		}
+	if len(os.Args) > 2 {
+		puttyPath = os.Args[2]
+	} else if len(puttyPath) == 0 {
+		fmt.Println("PATH 中未找到 pscp, 可通过第二个参数指定pscp路径")
+		os.Exit(1)
 	}
 
 	config := loadConf()
@@ -47,7 +45,7 @@ func main() {
 		config.Password, config.Localdir,
 		config.User+"@"+config.Ip+":"+
 			config.Remotedir)
-	//fmt.Println(cmd.Args)
+	fmt.Println(cmd.Args)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
@@ -64,7 +62,6 @@ func loadConf() *Config {
 	filePath := "./pscp.yml"
 	if len(os.Args) > 1 {
 		filePath = os.Args[1]
-		fmt.Println(filePath)
 	}
 	ymlFile, err := ioutil.ReadFile(filePath)
 	if err != nil {

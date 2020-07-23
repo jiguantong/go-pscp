@@ -49,4 +49,4 @@ cmd: "source /etc/profile&&/opt/tomcat/bin/shutdown.sh&&/opt/tomcat/bin/startup.
 ```
 ### build
 `go build -ldflags="-w -s"`
-`upx.exe -9 -k "pscp.exe"`
+`upx.exe -9 -k "jscp.exe"`

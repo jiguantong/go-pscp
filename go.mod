@@ -1,4 +1,4 @@
-module pscp
+module jscp
 
 go 1.14
 
