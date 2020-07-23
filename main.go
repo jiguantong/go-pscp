@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/xml"
 	"fmt"
 	"golang.org/x/crypto/ssh"
 	"gopkg.in/yaml.v2"
@@ -22,6 +23,18 @@ type Config struct {
 	// 传输后执行该命令
 	Cmd  string
 	Port string
+}
+
+type Option struct {
+	Key   string `xml:"name,attr"`
+	Value string `xml:"value,attr"`
+}
+type Component struct {
+	Options []Option `xml:"option"`
+}
+type XmlConfig struct {
+	XMLName xml.Name  `xml:"project"`
+	C       Component `xml:"component"`
 }
 
 func main() {
@@ -61,17 +74,48 @@ func loadConf() *Config {
 	var c = new(Config)
 	filePath := "./pscp.yml"
 	if len(os.Args) > 1 {
+		// 指定, 读取xml配置
 		filePath = os.Args[1]
+		file, err := os.Open(filePath)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		defer file.Close()
+		data, err := ioutil.ReadFile(filePath)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		var xmlC = new(XmlConfig)
+		if err := xml.Unmarshal(data, xmlC); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		optionMap := make(map[string]string)
+		for _, o := range xmlC.C.Options {
+			optionMap[o.Key] = o.Value
+		}
+		c.Ip = optionMap["ip"]
+		c.User = optionMap["user"]
+		c.Port = optionMap["port"]
+		c.Password = optionMap["pwd"]
+		c.Localdir = optionMap["localDir"]
+		c.Remotedir = optionMap["remoteDir"]
+		c.Cmd = optionMap["cmd"]
+	} else {
+		// 未指定文件路径, 读取当前目录下的yml
+		ymlFile, err := ioutil.ReadFile(filePath)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		if err := yaml.Unmarshal(ymlFile, c); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
 	}
-	ymlFile, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-	if err := yaml.Unmarshal(ymlFile, c); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
+
 	return c
 }
 
@@ -87,19 +131,18 @@ func runCmd(conf Config) {
 	config.HostKeyCallback = func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 		return nil
 	}
+	fmt.Println("### -> 正在连接服务器...")
 	client, err := ssh.Dial("tcp", conf.Ip+":"+conf.Port, config)
 	if nil != err {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("### -> 正在连接服务器...")
 	// 创建与远程服务器的会话
 	session, err := client.NewSession()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("### -> 服务器连接成功!")
 	fmt.Println("### -> 执行: ", conf.Cmd)
 	defer session.Close()
 	cmdReader, err := session.StdoutPipe()

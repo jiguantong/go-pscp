@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dev.aid.jscp.settings.JscpState">
+    <option name="ip" value="12" />
+    <option name="user" value="12" />
+    <option name="port" value="12" />
+    <option name="pwd" value="1212212121" />
+    <option name="remoteDir" value="12" />
+    <option name="localDir" value="12" />
+    <option name="cmd" value="12" />
+  </component>
+</project>
