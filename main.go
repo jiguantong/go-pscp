@@ -65,14 +65,17 @@ func main() {
 
 	stdin, _ := cmd.StdinPipe()
 	if err := cmd.Start(); err != nil {
-		log.Println(err)
-		return
+		log.Println(err.Error())
+		os.Exit(1)
 	}
 	io.WriteString(stdin, "y")
 	stdin.Close()
-	cmd.Wait()
+	if err := cmd.Wait(); err != nil {
+		log.Println(err.Error())
+		os.Exit(1)
+	}
 	//fmt.Println("### -> 传输完成")
-	fmt.Println("### => Push complete")
+	fmt.Println("### => Push complete.\n")
 	runCmd(*config)
 }
 
@@ -84,18 +87,18 @@ func loadConf() *Config {
 		filePath = os.Args[1]
 		file, err := os.Open(filePath)
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 			os.Exit(1)
 		}
 		defer file.Close()
 		data, err := ioutil.ReadFile(filePath)
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 			os.Exit(1)
 		}
 		var xmlC = new(XmlConfig)
 		if err := xml.Unmarshal(data, xmlC); err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 			os.Exit(1)
 		}
 		optionMap := make(map[string]string)
@@ -113,11 +116,11 @@ func loadConf() *Config {
 		// 未指定文件路径, 读取当前目录下的yml
 		ymlFile, err := ioutil.ReadFile(filePath)
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 			os.Exit(1)
 		}
 		if err := yaml.Unmarshal(ymlFile, c); err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 			os.Exit(1)
 		}
 	}
@@ -141,22 +144,22 @@ func runCmd(conf Config) {
 	fmt.Println("### => Connecting to server...")
 	client, err := ssh.Dial("tcp", conf.Ip+":"+conf.Port, config)
 	if nil != err {
-		fmt.Println(err)
-		return
+		log.Println(err.Error())
+		os.Exit(1)
 	}
 	// 创建与远程服务器的会话
 	session, err := client.NewSession()
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Println(err.Error())
+		os.Exit(1)
 	}
 	//fmt.Println("### -> 执行: ", conf.Cmd)
 	fmt.Println("### => Run cmd: ", conf.Cmd)
 	defer session.Close()
 	cmdReader, err := session.StdoutPipe()
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Println(err.Error())
+		os.Exit(1)
 	}
 	logScanner := bufio.NewScanner(cmdReader)
 	_logChan := make(chan []byte, 300)
@@ -166,8 +169,8 @@ func runCmd(conf Config) {
 		}
 	}(logScanner, _logChan)
 	if err = session.Start(conf.Cmd); err != nil {
-		fmt.Println(err)
-		return
+		log.Println(err.Error())
+		os.Exit(1)
 	}
 	for log := range _logChan {
 		_log := string(log)
