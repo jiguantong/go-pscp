@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"golang.org/x/crypto/ssh"
 	"gopkg.in/yaml.v2"
+	"io"
 	"io/ioutil"
 	"log"
 	"net"
@@ -61,11 +62,15 @@ func main() {
 	//fmt.Println(cmd.Args)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	err := cmd.Run()
-	if err != nil {
+
+	stdin, _ := cmd.StdinPipe()
+	if err := cmd.Start(); err != nil {
 		log.Println(err)
 		return
 	}
+	io.WriteString(stdin, "y")
+	stdin.Close()
+	cmd.Wait()
 	//fmt.Println("### -> 传输完成")
 	fmt.Println("### => Push complete")
 	runCmd(*config)

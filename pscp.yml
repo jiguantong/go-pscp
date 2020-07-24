@@ -19,7 +19,7 @@ port: 22
 # 服务器部署目录
 remotedir: "/opt/project"
 # 本地待部署项目目录
-localdir: "../pscp/"
+localdir: "../jscp/"
 # 传输完成后执行该命令
 # 示例: 重启tomcat并跟踪日志  !!! 如果仅需传输文件, 注释该行即可
-cmd: "source /etc/profile&&/opt/tomcat/bin/shutdown.sh&&/opt/tomcat/bin/startup.sh&&tail -f /opt/tomcat/logs/catalina.out"
+#cmd: "source /etc/profile&&/opt/tomcat/bin/shutdown.sh&&/opt/tomcat/bin/startup.sh&&tail -f /opt/tomcat/logs/catalina.out"
