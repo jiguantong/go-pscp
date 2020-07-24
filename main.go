@@ -58,7 +58,7 @@ func main() {
 		config.Password, config.Localdir,
 		config.User+"@"+config.Ip+":"+
 			config.Remotedir)
-	fmt.Println(cmd.Args)
+	//fmt.Println(cmd.Args)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
