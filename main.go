@@ -66,7 +66,8 @@ func main() {
 		log.Println(err)
 		return
 	}
-	fmt.Println("### -> 传输完成")
+	//fmt.Println("### -> 传输完成")
+	fmt.Println("### => Push complete")
 	runCmd(*config)
 }
 
@@ -131,7 +132,8 @@ func runCmd(conf Config) {
 	config.HostKeyCallback = func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 		return nil
 	}
-	fmt.Println("### -> 正在连接服务器...")
+	//fmt.Println("### -> 正在连接服务器...")
+	fmt.Println("### => Connecting to server...")
 	client, err := ssh.Dial("tcp", conf.Ip+":"+conf.Port, config)
 	if nil != err {
 		fmt.Println(err)
@@ -143,7 +145,8 @@ func runCmd(conf Config) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("### -> 执行: ", conf.Cmd)
+	//fmt.Println("### -> 执行: ", conf.Cmd)
+	fmt.Println("### => Run cmd: ", conf.Cmd)
 	defer session.Close()
 	cmdReader, err := session.StdoutPipe()
 	if err != nil {

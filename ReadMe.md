@@ -7,16 +7,16 @@
 - 之前:
   ### yarn build => 打开xftp => 找到部署目录 => 打开打包好的文件夹所在目录 => 拖动上传 => 回到webstorm
 - 现在:
-  ### yarn build && pscp.exe
+  ### yarn build && jscp.exe
 -------------------------
 tomcat项目部署流程
 - 之前:
   ### build => 打开xftp => 找到部署目录 => 打开打包好的文件夹所在目录 => 拖动上传 => 切换到xshell => shutdown tomcat => start tomcat =>tailf log => 回IDEA 
 - 现在:
-  ### pscp.exe
+  ### jscp.exe
 
 ## 使用说明
-将pscp.exe和pscp.yml放到项目根目录, 配置pscp.yml, 即可在jetbrains工具的控制台使用pscp命令
+将jscp.exe和pscp.yml放到项目根目录, 配置pscp.yml, 即可在jetbrains工具的控制台使用pscp命令
 
 ## 配置说明
  ```
