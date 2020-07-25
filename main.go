@@ -173,7 +173,7 @@ func runCmd(conf Config) {
 		os.Exit(1)
 	}
 
-	fmt.Println("-----------------------------Server-output---------------------------------")
+	fmt.Println("===================== Server output =====================")
 	for _log := range _logChan {
 		fmt.Println(string(_log))
 	}
