@@ -75,7 +75,7 @@ func main() {
 		os.Exit(1)
 	}
 	//fmt.Println("### -> 传输完成")
-	fmt.Println("### => Push complete.\n")
+	fmt.Println("\n### => Push complete.")
 	runCmd(*config)
 }
 
@@ -141,7 +141,7 @@ func runCmd(conf Config) {
 		return nil
 	}
 	//fmt.Println("### -> 正在连接服务器...")
-	fmt.Println("### => Connecting to server...")
+	fmt.Println("\n### => Connecting to server...")
 	client, err := ssh.Dial("tcp", conf.Ip+":"+conf.Port, config)
 	if nil != err {
 		log.Println(err.Error())
@@ -154,7 +154,7 @@ func runCmd(conf Config) {
 		os.Exit(1)
 	}
 	//fmt.Println("### -> 执行: ", conf.Cmd)
-	fmt.Println("### => Run cmd: ", conf.Cmd)
+	fmt.Println("\n### => Run cmd: ", conf.Cmd, "\n")
 	defer session.Close()
 	cmdReader, err := session.StdoutPipe()
 	if err != nil {
@@ -172,8 +172,9 @@ func runCmd(conf Config) {
 		log.Println(err.Error())
 		os.Exit(1)
 	}
-	for log := range _logChan {
-		_log := string(log)
-		fmt.Println(_log)
+
+	fmt.Println("-----------------------------Server-output---------------------------------")
+	for _log := range _logChan {
+		fmt.Println(string(_log))
 	}
 }
